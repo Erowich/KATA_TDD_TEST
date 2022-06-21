@@ -13,3 +13,7 @@ func Test_Add_Numbers_With_Empty_Return_Fail(t *testing.T) {
 	res := calculate.Add("")
 	assert.Equal(t, model.CalculatorResponseModel{Error: errors.New("input can't be empty"), Result: 0}, res)
 }
+func Test_Add_Numbers_With_Not_Empty_Return_Success(t *testing.T) {
+	res := calculate.Add("1,2,3")
+	assert.Equal(t, model.CalculatorResponseModel{Error: nil, Result: 6}, res)
+}
