@@ -1,9 +1,8 @@
-package main
+package internal
 
 import (
-	helper "KATA_TDD/internal/helper"
-	model "KATA_TDD/internal/models"
-	"fmt"
+	helper "KATA_TDD/helper"
+	model "KATA_TDD/models"
 )
 
 func Add(s string) model.CalculatorResponseModel {
@@ -14,9 +13,4 @@ func Add(s string) model.CalculatorResponseModel {
 	}
 
 	return model.CalculatorResponseModel{Error: response.Error, Result: response.Result}
-}
-
-func main() {
-	c := Add("123")
-	fmt.Println(c)
 }

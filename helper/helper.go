@@ -1,7 +1,7 @@
 package helper
 
 import (
-	model "KATA_TDD/internal/models"
+	model "KATA_TDD/models"
 	"errors"
 )
 
