@@ -16,7 +16,7 @@ func Add(s string) model.CalculatorResponseModel {
 		return response
 	}
 
-	detectedStringArray := DetectNumbersInString(s)
+	detectedStringArray := detectNumbersInString(s)
 	if detectedStringArray.Error != nil {
 		return model.CalculatorResponseModel{
 			Error: detectedStringArray.Error,
@@ -43,8 +43,9 @@ func calculate(sArray []string) model.CalculatorResponseModel {
 				Error:  errors.New("can not parse string to int"),
 				Result: 0,
 			}
+		} else if number < 1000 {
+			sum += number
 		}
-		sum += number
 
 	}
 	return model.CalculatorResponseModel{
@@ -53,7 +54,7 @@ func calculate(sArray []string) model.CalculatorResponseModel {
 	}
 }
 
-func DetectNumbersInString(s string) model.DelimiterResponseModel {
+func detectNumbersInString(s string) model.DelimiterResponseModel {
 	reg, err := regexp.Compile("[^a-zA-Z0-9 -]")
 	if err != nil {
 		return model.DelimiterResponseModel{

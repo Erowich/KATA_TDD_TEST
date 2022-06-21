@@ -39,3 +39,8 @@ func Test_Add_Numbers_With_NegativeNumbers_Return_Success(t *testing.T) {
 	res := calculate.Add("//[*][%]\n1*2%-3*-4")
 	assert.Equal(t, model.CalculatorResponseModel{Error: errors.New("negatives not allowed-3,-4"), Result: 0}, res)
 }
+
+func Test_Add_Numbers_With_Bigger_Than_1000_Return_Success(t *testing.T) {
+	res := calculate.Add("//[*][%]\n1*2%3*4000*7*1009*7")
+	assert.Equal(t, model.CalculatorResponseModel{Error: nil, Result: 20}, res)
+}
