@@ -6,6 +6,6 @@ import (
 )
 
 func main() {
-	c := calculate.Add("")
+	c := calculate.Add("1\n2,3")
 	fmt.Println(c)
 }

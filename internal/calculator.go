@@ -14,6 +14,7 @@ func Add(s string) model.CalculatorResponseModel {
 	if response.Error != nil {
 		return response
 	}
+	s = strings.ReplaceAll(s, "\n", ",")
 	splitedStringArray := strings.Split(s, ",")
 
 	return calculate(splitedStringArray)
