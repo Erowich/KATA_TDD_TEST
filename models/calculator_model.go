@@ -1,11 +1,11 @@
 package models
 
 type CalculatorResponseModel struct {
-	Error  error
 	Result int
+	Error  error
 }
 
 type DelimiterResponseModel struct {
-	Error  error
 	Result []string
+	Error  error
 }

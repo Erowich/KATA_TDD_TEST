@@ -21,8 +21,21 @@ func Test_Add_Numbers_With_NewLine_Return_Success(t *testing.T) {
 	res := calculate.Add("1\n2,3")
 	assert.Equal(t, model.CalculatorResponseModel{Error: nil, Result: 6}, res)
 }
-
+func Test_Add_Numbers_With_DifferentFormat_Delimiter_Return_Success(t *testing.T) {
+	res := calculate.Add("//[***]\n1***2***3")
+	assert.Equal(t, model.CalculatorResponseModel{Error: nil, Result: 6}, res)
+}
 func Test_Add_Numbers_With_Support_Different_Delimiters_Return_Success(t *testing.T) {
-	res := calculate.Add("//;\n1;2")
-	assert.Equal(t, model.CalculatorResponseModel{Error: nil, Result: 3}, res)
+	res := calculate.Add("//[*][%]\n1*2%3*4")
+	assert.Equal(t, model.CalculatorResponseModel{Error: nil, Result: 10}, res)
+}
+
+func Test_Add_Numbers_With_NegativeNumber_Return_Success(t *testing.T) {
+	res := calculate.Add("//;\n1;-2")
+	assert.Equal(t, model.CalculatorResponseModel{Error: errors.New("negatives not allowed"), Result: 0}, res)
+}
+
+func Test_Add_Numbers_With_NegativeNumbers_Return_Success(t *testing.T) {
+	res := calculate.Add("//[*][%]\n1*2%-3*-4")
+	assert.Equal(t, model.CalculatorResponseModel{Error: errors.New("negatives not allowed-3,-4"), Result: 0}, res)
 }

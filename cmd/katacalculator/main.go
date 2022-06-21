@@ -7,6 +7,6 @@ import (
 
 func main() {
 
-	res := calculate.Add("1\n2,3")
+	res := calculate.Add("//[***]\n1***2***3")
 	fmt.Println(res)
 }

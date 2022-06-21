@@ -22,20 +22,29 @@ func Add(s string) model.CalculatorResponseModel {
 			Error: detectedStringArray.Error,
 		}
 	}
+	findNegativeNumbers := helper.DetectNegativeNumbers(detectedStringArray.Result)
+
+	if findNegativeNumbers.Error != nil {
+
+		return model.CalculatorResponseModel{
+			Error: findNegativeNumbers.Error,
+		}
+
+	}
 	return calculate(detectedStringArray.Result)
 }
 
 func calculate(sArray []string) model.CalculatorResponseModel {
 	sum := 0
 	for _, num := range sArray {
-		num, err := strconv.Atoi(num)
+		number, err := strconv.Atoi(num)
 		if err != nil {
 			return model.CalculatorResponseModel{
 				Error:  errors.New("can not parse string to int"),
 				Result: 0,
 			}
 		}
-		sum += num
+		sum += number
 
 	}
 	return model.CalculatorResponseModel{
@@ -48,7 +57,7 @@ func DetectNumbersInString(s string) model.DelimiterResponseModel {
 	reg, err := regexp.Compile("[^a-zA-Z0-9 -]")
 	if err != nil {
 		return model.DelimiterResponseModel{
-			Error: errors.New("reger error occured"),
+			Error: errors.New("regex error occured"),
 		}
 	}
 
@@ -56,10 +65,22 @@ func DetectNumbersInString(s string) model.DelimiterResponseModel {
 	regexOfString = strings.Trim(regexOfString, " ")
 	regexOfString = strings.Replace(regexOfString, " ", ",", -1)
 
-	finalOfString := strings.Split(regexOfString, ",")
+	splitString := strings.Split(regexOfString, ",")
+
+	finalOfString := delete_empty(splitString)
 
 	return model.DelimiterResponseModel{
 		Error:  nil,
 		Result: finalOfString,
 	}
+}
+
+func delete_empty(sArray []string) []string {
+	var res []string
+	for _, str := range sArray {
+		if str != "" {
+			res = append(res, str)
+		}
+	}
+	return res
 }
