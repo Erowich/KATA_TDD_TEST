@@ -32,8 +32,8 @@ func Add(s string, ch chan *model.CalculatorResponseModel) {
 
 	}
 	go calculate(detectedStringArray.Result, chGetCalculateResponse)
-	a := <-chGetCalculateResponse
-	ch <- &model.CalculatorResponseModel{Error: a.Error, Result: a.Result}
+	calculateRes := <-chGetCalculateResponse
+	ch <- &model.CalculatorResponseModel{Error: calculateRes.Error, Result: calculateRes.Result}
 
 }
 
