@@ -9,37 +9,42 @@ import (
 	"strings"
 )
 
-func Add(s string) model.CalculatorResponseModel {
+func Add(s string, ch chan *model.CalculatorResponseModel) {
 	response := helper.IsStringEmpty(s)
-
+	chGetCalculateResponse := make(chan *model.CalculatorResponseModel)
+	defer close(chGetCalculateResponse)
 	if response.Error != nil {
-		return response
+		ch <- &response
+		return
 	}
 
 	detectedStringArray := detectNumbersInString(s)
 	if detectedStringArray.Error != nil {
-		return model.CalculatorResponseModel{
-			Error: detectedStringArray.Error,
-		}
+		ch <- &response
+		return
 	}
 	findNegativeNumbers := helper.DetectNegativeNumbers(detectedStringArray.Result)
 
 	if findNegativeNumbers.Error != nil {
 
-		return model.CalculatorResponseModel{
-			Error: findNegativeNumbers.Error,
-		}
+		ch <- &model.CalculatorResponseModel{Error: findNegativeNumbers.Error, Result: findNegativeNumbers.Result}
+		return
 
 	}
-	return calculate(detectedStringArray.Result)
+	go calculate(detectedStringArray.Result, chGetCalculateResponse)
+	a := <-chGetCalculateResponse
+	ch <- &model.CalculatorResponseModel{Error: a.Error, Result: a.Result}
+
 }
 
-func calculate(sArray []string) model.CalculatorResponseModel {
+func calculate(sArray []string, ch chan *model.CalculatorResponseModel) {
+	chGetCalculateResponse := make(chan *model.CalculatorResponseModel)
+	defer close(chGetCalculateResponse)
 	sum := 0
 	for _, num := range sArray {
 		number, err := strconv.Atoi(num)
 		if err != nil {
-			return model.CalculatorResponseModel{
+			ch <- &model.CalculatorResponseModel{
 				Error:  errors.New("can not parse string to int"),
 				Result: 0,
 			}
@@ -48,10 +53,12 @@ func calculate(sArray []string) model.CalculatorResponseModel {
 		}
 
 	}
-	return model.CalculatorResponseModel{
+
+	ch <- &model.CalculatorResponseModel{
 		Error:  nil,
 		Result: sum,
 	}
+
 }
 
 func detectNumbersInString(s string) model.DelimiterResponseModel {
